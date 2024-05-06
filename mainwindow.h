@@ -19,23 +19,27 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_c_btn_connect_clicked();
+
+    void on_m_btn_freshMover_clicked();
+
+    void on_m_btn_connect_mover_clicked();
+
+    void on_m_btn_rest_clicked();
 
     void on_m_btn_move_clicked();
 
-    void on_c_btn_jogLeft_clicked();
-
-    void on_c_btn_jogRight_clicked();
-
-    void on_pushButton_clicked();
-
-    void on_c_btn_fresh_clicked();
-
-    void on_c_spinbox_setJogStep_valueChanged(int arg1);
+    void on_m_spin_abs_position_valueChanged(double arg1);
 
 private:
     Ui::MainWindow *ui;
     int m_handle;
-    void init_mover();
+    // void init_mover();
+    // 初始化位移台
+    void initMover();
+    // 初始化UVC相机
+    void initUVC();
+    void getMoverCurrentPos();
+
+
 };
 #endif // MAINWINDOW_H

@@ -13,13 +13,9 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
-set(Mover_DIR "${PROJECT_SOURCE_DIR}/ext/LuBon_mover_C++SDK/x64")
-
-# 指定头文件搜索路径
-INCLUDE_DIRECTORIES(${Mover_DIR}/include)
-# 指定引用的外部库的搜索路径
-LINK_DIRECTORIES(${Mover_DIR}/lib)
+# SDK路径
+set(LubonMover_DIR "${PROJECT_SOURCE_DIR}/ext/LuBon_mover_C++SDK")
+find_package(LubonMover REQUIRED)
 
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
@@ -62,8 +58,8 @@ endif()
 
 # 链接库
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-# 链接Mover库
-target_link_libraries(${PROJECT_NAME} PRIVATE libmoverLibrary)
+# 链接LubonMover库
+target_link_libraries(${PROJECT_NAME} PRIVATE ${LUBONMOVER_LIBRARIES})
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
