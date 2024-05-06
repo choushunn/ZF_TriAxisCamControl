@@ -17,18 +17,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(LubonMover_DIR "${PROJECT_SOURCE_DIR}/ext/LuBon_mover_C++SDK")
 find_package(LubonMover REQUIRED)
 # OpenCV
-set(OpenCV_DIR "E:/share/runtime/win/opencv")
+set(OpenCV_DIR "E:/share/runtime/win/x64/opencv/build")
 find_package(OpenCV REQUIRED)
 
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Multimedia)
 
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        cusbcamera.h
+        cusbcamera.cpp
 )
 
 
@@ -60,7 +62,7 @@ endif()
 
 
 # 链接库
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Multimedia)
 # 链接第三方库
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LUBONMOVER_LIBRARIES})
