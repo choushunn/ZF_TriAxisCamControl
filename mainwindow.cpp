@@ -9,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 初始化位移台
     this->initMover();
+
+    // 初始化UVC
+    this->initUVC();
 }
 
 MainWindow::~MainWindow()
@@ -47,6 +50,29 @@ void MainWindow::initMover()
     }
 }
 
+void MainWindow::initUVC()
+{
+    // // 获取可用摄像头列表
+    // QList<QString> cameraList;
+    // int cameraIndex = 0;
+    // while (true) {
+    //     cv::VideoCapture capture(cameraIndex);
+    //     if (!capture.isOpened()) {
+    //         break;
+    //     }
+    //     else {
+    //         QString cameraName = "Camera " + QString::number(cameraIndex);
+    //         cameraList.append(cameraName);
+    //         capture.release();
+    //         cameraIndex++;
+    //     }
+    // }
+
+    // // 将摄像头列表添加到QComboBox中
+    // ui->m_cbx_cameraList->addItems(cameraList);
+
+}
+
 /*
 刷新位移台设备
 */
@@ -82,7 +108,7 @@ void MainWindow::on_m_btn_connect_mover_clicked()
         else
         {
             // 获取当前设备支持的轴数量
-            int axisNum = ::getDeviceCode(m_handle);
+            // int axisNum = ::getDeviceCode(m_handle);
 
             // 初始化轴设备
             int ID = 1;
@@ -141,30 +167,6 @@ void MainWindow::on_m_btn_rest_clicked()
 }
 
 
-void MainWindow::on_m_btn_move_clicked()
-{
-    float disp = ui->m_spin_abs_position->text().toFloat();
-    // 设置move的绝对位置
-    int ret = ::setAbsoluteDisp(m_handle, 1, disp);
-    if (ret < 0)
-    {
-
-        statusBar()->showMessage("设置绝对位置失败!");
-        return;
-    }
-
-    // move运行
-    ret = ::moveEmcvx(m_handle, 1, MOVE_CODE_MOVE);
-    if (ret < 0)
-    {
-        statusBar()->showMessage("move运行失败!");
-        return;
-    }
-    else
-    {
-        statusBar()->showMessage("move运行成功!");
-    }
-}
 
 
 void MainWindow::on_m_spin_abs_position_valueChanged(double arg1)
@@ -194,10 +196,6 @@ void MainWindow::on_m_spin_jogDelayTimes_valueChanged(int arg1)
 }
 
 
-void MainWindow::on_m_spin_abs_position_editingFinished()
-{
-
-}
 
 
 void MainWindow::on_m_btn_stopJog_clicked()
@@ -242,6 +240,8 @@ void MainWindow::on_m_btn_stopJog_clicked()
         qDebug() << "设置JOG延时时间成功";
 
     }
+    // 如果
+    ui->m_chx_autoCapture->isChecked();
 
     if(m_jogStep < 0){
         // 向左移动
@@ -295,5 +295,12 @@ void MainWindow::on_m_btn_absStart_clicked()
     {
         statusBar()->showMessage("move运行成功!");
     }
+}
+
+
+
+void MainWindow::on_m_btn_openCamera_clicked()
+{
+
 }
 

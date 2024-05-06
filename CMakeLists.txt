@@ -13,9 +13,12 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# SDK路径
+# LubonMover SDK路径
 set(LubonMover_DIR "${PROJECT_SOURCE_DIR}/ext/LuBon_mover_C++SDK")
 find_package(LubonMover REQUIRED)
+# OpenCV
+set(OpenCV_DIR "E:/share/runtime/win/opencv")
+find_package(OpenCV REQUIRED)
 
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
@@ -58,7 +61,8 @@ endif()
 
 # 链接库
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-# 链接LubonMover库
+# 链接第三方库
+target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LUBONMOVER_LIBRARIES})
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

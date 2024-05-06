@@ -294,7 +294,7 @@
             </size>
            </property>
            <property name="minimum">
-            <number>10</number>
+            <number>20</number>
            </property>
            <property name="maximum">
             <number>10000</number>
@@ -318,6 +318,20 @@
        </item>
        <item>
         <widget class="Line" name="line_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="m_chx_autoCapture">
+         <property name="text">
+          <string>启用自动采集图像</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_5">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -381,7 +395,7 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_7">
          <item>
-          <widget class="QComboBox" name="comboBox">
+          <widget class="QComboBox" name="m_cbx_cameraList">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -391,7 +405,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="m_btn_openCamera">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -404,7 +418,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="c_btn_fresh_2">
+          <widget class="QPushButton" name="m_btn_freshCamera">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -425,7 +439,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="m_lbl_video">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>3</horstretch>
