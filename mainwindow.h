@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "LuBon_mover_C++SDK/x64/MoverLibrary.h"
+#include "MoverLibrary.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
