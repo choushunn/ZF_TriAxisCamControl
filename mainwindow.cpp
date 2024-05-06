@@ -2,6 +2,8 @@
 #include "./ui_mainwindow.h"
 #include <QDateTime>
 #include <QMessageBox>
+#include <QStandardPaths>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -23,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_moverTimer = new QTimer();
     m_moverTimer->start(200);
     connect(m_moverTimer, &QTimer::timeout, this, &MainWindow::getMoverCurrentPos);
+    this->setWindowIcon(QIcon(":/img/favicon.ico"));
 }
 
 MainWindow::~MainWindow()
@@ -208,7 +211,9 @@ void MainWindow::on_m_spin_jogDelay_valueChanged(int arg1)
 
 void  MainWindow::takePhoto()
 {
-    QString folderPath = "output";
+    QString folderPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    folderPath += "/outputs"; // 将 "output" 文件夹添加到文档目录中
+
     QDir folder(folderPath);
 
     // 检查文件夹是否存在，如果不存在则创建
@@ -381,7 +386,7 @@ void MainWindow::showCameraFrame()
     cv::cvtColor(frame, frame, cv::COLOR_BGR2RGB);
     // 收到保存图像的信号，就保存图像
 
-    cv::resize(frame, frame, cv::Size(640, 480));
+    // cv::resize(frame, frame, cv::Size(640, 480));
     // // 显示处理后的图像
     QImage qimage(frame.data, frame.cols, frame.rows, QImage::Format_RGB888);
     QPixmap pixmap = QPixmap::fromImage(qimage);
