@@ -1,7 +1,7 @@
 models/
 opencv/
 
-LuBon_mover_C++SDK/
+# LuBon_mover_C++SDK/
 *.user*
 ### Example user template
 

@@ -1,0 +1,30 @@
+# - Config file for the LUBONMOVER library
+# It defines the following variables
+#  LUBONMOVER_INCLUDE_DIR - include directory
+#  LUBONMOVER_LIBRARIES - library files to link against
+
+# 计算路径
+get_filename_component(LUBONMOVER_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(LUBONMOVER_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/x64/include")
+set(LUBONMOVER_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/x64/lib/libmoverLibrary.lib")
+
+# 创建导入目标
+add_library(LUBONMOVER SHARED IMPORTED)
+
+# 设置导入目标的属性
+set_target_properties(LUBONMOVER PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "${LUBONMOVER_INCLUDE_DIR}"
+  IMPORTED_LOCATION "${LUBONMOVER_LIBRARIES}"
+)
+
+# 设置变量
+set(LUBONMOVER_INCLUDE_DIR "${LUBONMOVER_INCLUDE_DIR}" CACHE PATH "LUBONMOVER  include directory")
+set(LUBONMOVER_LIBRARIES "${LUBONMOVER_LIBRARIES}" CACHE FILEPATH "LUBONMOVER libraries")
+
+include_directories(${LUBONMOVER_INCLUDE_DIR})
+
+# 提供包信息
+set(LUBONMOVER_FOUND TRUE)
+if(NOT LUBONMOVER_FIND_QUIETLY)
+  message(STATUS "Find LUBONMOVER: ${LUBONMOVER_LIBRARIES}")
+endif()

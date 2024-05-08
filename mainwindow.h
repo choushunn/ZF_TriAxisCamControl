@@ -37,8 +37,6 @@ private slots:
 
     void on_m_spin_jogDelay_valueChanged(int arg1);
 
-
-
     void on_m_btn_absStart_clicked();
 
     void showCameraFrame();
@@ -55,6 +53,7 @@ private slots:
     void on_m_btn_record_clicked();
 
     double getMoverCurrentPos();
+
     void on_m_cbx_cameraList_currentIndexChanged(int index);
 
 private:
@@ -64,7 +63,6 @@ private:
     CUSBCamera *m_usbCap = nullptr;
     int m_camIndex= 0;
     cv::Mat frame;
-    // void init_mover();
     // 初始化位移台
     void initMover();
     // 初始化UVC相机
