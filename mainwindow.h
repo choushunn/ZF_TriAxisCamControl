@@ -55,6 +55,8 @@ private slots:
     void on_m_btn_record_clicked();
 
     double getMoverCurrentPos();
+    void on_m_cbx_cameraList_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
     int m_handle;

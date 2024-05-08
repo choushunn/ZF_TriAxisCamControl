@@ -16,8 +16,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # LubonMover SDK路径
 set(LubonMover_DIR "${PROJECT_SOURCE_DIR}/ext/LuBon_mover_C++SDK")
 find_package(LubonMover REQUIRED)
-# OpenCV
+# MSVC OpenCV
 set(OpenCV_DIR "E:/share/runtime/win/x64/opencv/build")
+# set(OpenCV_DIR "E:/share/runtime/win/x64/MinGW_OpenCV490")
 find_package(OpenCV REQUIRED)
 
 

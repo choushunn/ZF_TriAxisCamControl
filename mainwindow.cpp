@@ -443,3 +443,9 @@ void MainWindow::on_m_btn_record_clicked()
     getMoverCurrentPos();
 }
 
+
+void MainWindow::on_m_cbx_cameraList_currentIndexChanged(int index)
+{
+    this->m_camIndex = index;
+}
+
