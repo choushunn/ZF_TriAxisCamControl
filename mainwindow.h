@@ -27,7 +27,7 @@ private slots:
 
     void on_m_btn_connect_mover_clicked();
 
-    void on_m_btn_rest_clicked();
+    void on_m_btn_reset_clicked();
 
     void on_m_spin_abs_position_valueChanged(double arg1);
 
@@ -56,6 +56,7 @@ private slots:
 
     void on_m_cbx_cameraList_currentIndexChanged(int index);
 
+
 private:
     Ui::MainWindow *ui;
     int m_handle;
@@ -67,6 +68,7 @@ private:
     void initMover();
     // 初始化UVC相机
     void initUVC();
+    void initUi(bool flag);
 
     int m_jogStep = 0;
     int m_jogNum = 0;

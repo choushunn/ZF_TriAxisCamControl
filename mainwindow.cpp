@@ -9,10 +9,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    // 启动软件时，禁用下列控件
+    this->initUi(true);
 
-    ui->m_btn_absStart->setDisabled(true);
-    ui->m_btn_startJog->setDisabled(true);
-    ui->m_chx_autoCapture->setDisabled(true);
     // 初始化位移台
     this->initMover();
 
@@ -26,6 +25,18 @@ MainWindow::MainWindow(QWidget *parent)
     m_moverTimer->start(200);
     connect(m_moverTimer, &QTimer::timeout, this, &MainWindow::getMoverCurrentPos);
     this->setWindowIcon(QIcon(":/img/favicon.ico"));
+}
+
+void MainWindow::initUi(bool flag){
+    ui->m_btn_absStart->setDisabled(flag);
+    ui->m_btn_startJog->setDisabled(flag);
+    ui->m_chx_autoCapture->setDisabled(flag);
+    ui->m_spin_jogStep->setDisabled(flag);
+    ui->m_spin_jogDelay->setDisabled(flag);
+    ui->m_spin_jogNum->setDisabled(flag);
+    ui->m_spin_abs_position->setDisabled(flag);
+    ui->m_btn_reset->setDisabled(flag);
+    ui->m_btn_stop->setDisabled(flag);
 }
 
 MainWindow::~MainWindow()
@@ -66,9 +77,13 @@ void MainWindow::initMover()
         ui->m_cbx_modelName->addItems(qstrList);
     }
 }
-
+/*
+初始化UVC
+*/
 void MainWindow::initUVC()
 {
+    ui->m_btn_snap->setDisabled(true);
+    ui->m_btn_record->setDisabled(true);
     m_usbCap = new CUSBCamera();
     ui->m_cbx_cameraList->clear();
     // 将摄像头列表添加到QComboBox中
@@ -132,11 +147,9 @@ void MainWindow::on_m_btn_connect_mover_clicked()
             else
             {
                 // 连接成功后，先执行复位
-                this->on_m_btn_rest_clicked();
+                this->on_m_btn_reset_clicked();
                 statusBar()->showMessage("连接位移台成功!");
-                ui->m_btn_absStart->setDisabled(false);
-                ui->m_btn_startJog->setDisabled(false);
-                ui->m_chx_autoCapture->setDisabled(false);
+                this->initUi(false);
                 ui->m_btn_connect_mover->setText("断开");
             }
 
@@ -147,9 +160,7 @@ void MainWindow::on_m_btn_connect_mover_clicked()
             // qDebug() << m_handle;
             statusBar()->showMessage("断开位移台成功!");
             ui->m_btn_connect_mover->setText("连接");
-            ui->m_btn_absStart->setDisabled(true);
-            ui->m_btn_startJog->setDisabled(true);
-            ui->m_chx_autoCapture->setDisabled(true);
+            this->initUi(true);
         }
     }
 }
@@ -164,7 +175,7 @@ double MainWindow::getMoverCurrentPos(){
 }
 
 
-void MainWindow::on_m_btn_rest_clicked()
+void MainWindow::on_m_btn_reset_clicked()
 {
     //设置位移台复位
 
@@ -243,8 +254,6 @@ void MainWindow::on_m_btn_startJog_clicked()
     m_jogStep = ui->m_spin_jogStep->value();
     m_jogDelay= ui->m_spin_jogDelay->value();
 
-
-
     //步进移动
     // qDebug() << m_jogStep*0.001 << m_jogDelay << m_jogNum ;
     double step = abs(m_jogStep*0.001);
@@ -259,7 +268,6 @@ void MainWindow::on_m_btn_startJog_clicked()
         QMessageBox::warning(NULL, "警告", "当前步进参数超出量程,请重新设置!", QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
         return;
     }
-
 
     // 设置JOG运行的步长
     int ret = ::setJogStep(m_handle, 1, step);
@@ -404,6 +412,8 @@ void MainWindow::on_m_btn_openCamera_clicked()
         ui->m_lbl_video->clear();
         qDebug() << "MainWindow:Camera closed successfully!";
         ui->m_btn_openCamera->setText("打开");
+        ui->m_btn_snap->setDisabled(true);
+        ui->m_btn_record->setDisabled(true);
     } else {
         // 根据索引打开相机
         bool success = m_usbCap->open(m_camIndex);
@@ -412,6 +422,8 @@ void MainWindow::on_m_btn_openCamera_clicked()
             m_readTimer->start();
             qDebug() << "MainWindow:Camera opened successfully!";
             ui->m_btn_openCamera->setText("关闭");
+            ui->m_btn_snap->setDisabled(false);
+            ui->m_btn_record->setDisabled(false);
         } else {
             // QMessageBox::critical(this, "Error", "Failed to open camera!");
         }
@@ -448,4 +460,7 @@ void MainWindow::on_m_cbx_cameraList_currentIndexChanged(int index)
 {
     this->m_camIndex = index;
 }
+
+
+
 
