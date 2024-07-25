@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     // 初始化UVC
     this->initUVC();
     m_readTimer = new QTimer();
-    m_readTimer->setInterval(int(1000/30));
+    m_readTimer->setInterval(int(1000/this->m_fps));
     m_readTimer->start();
 
     m_moverTimer = new QTimer();
@@ -155,6 +155,7 @@ void MainWindow::on_m_btn_connect_mover_clicked()
 
         }
     }else{
+        this->on_m_btn_reset_clicked();
         // 关闭设备
         if( !::closeEmcvx(m_handle)){
             // qDebug() << m_handle;
@@ -237,13 +238,24 @@ void  MainWindow::takePhoto()
         }
     }
 
-    QString filename = folder.filePath("spring_" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz") + ".jpg");
+    QString filename = folder.filePath( QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss")+"_"+QString::number(m_count) + ".jpg");
+    // m_jogStep
 
-    cv::Mat frame1 = frame;
-    cv::cvtColor(frame1, frame1, cv::COLOR_BGR2RGB);
-    cv::imwrite(filename.toStdString(), frame1);
 
-    qDebug() << "Photo saved: " << filename;
+
+    m_count++;
+    cv::Mat in_frame = frame;
+    cv::Mat out_frame ;
+
+    cv::cvtColor(in_frame, out_frame, cv::COLOR_BGR2RGB);
+    if(!out_frame.empty()){
+        cv::imwrite(filename.toStdString(), out_frame);
+        statusBar()->showMessage("拍照成功!");
+    }{
+        statusBar()->showMessage("拍照失败!");
+    }
+    // qDebug() << "Photo saved: " << filename;
+
 }
 
 
@@ -253,22 +265,23 @@ void MainWindow::on_m_btn_startJog_clicked()
     m_jogNum = ui->m_spin_jogNum->value();
     m_jogStep = ui->m_spin_jogStep->value();
     m_jogDelay= ui->m_spin_jogDelay->value();
-
+    m_count = 1;
     //步进移动
     // qDebug() << m_jogStep*0.001 << m_jogDelay << m_jogNum ;
-    double step = abs(m_jogStep*0.001);
 
     // 判断当前设置是否会超出量程
-    double currentPos = abs(this->getMoverCurrentPos());
-    double totalPos = step * m_jogNum + currentPos;
-    // qDebug() << totalPos;
-    if(totalPos>15){
+    double currentPos = this->getMoverCurrentPos();
+
+    double totalPos = m_jogStep*0.001 * m_jogNum + currentPos;
+
+    if(totalPos>15 or totalPos < -15){
         statusBar()->showMessage("当前步进参数超出量程,请重新设置!");
         // 弹出提示框
         QMessageBox::warning(NULL, "警告", "当前步进参数超出量程,请重新设置!", QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
         return;
     }
 
+    double step = abs(m_jogStep*0.001);
     // 设置JOG运行的步长
     int ret = ::setJogStep(m_handle, 1, step);
     if (ret < 0)
@@ -319,9 +332,11 @@ void MainWindow::on_m_btn_startJog_clicked()
         // 每次定时器触发时，执行次数加1，达到指定次数后停止定时器
         QObject::connect(m_takeTimer, &QTimer::timeout, [&]() {
             m_jogNum--;
+
             if (m_jogNum <= 0) {
                 qDebug() << "Finished!";
                 m_takeTimer->stop(); // 停止定时器
+
                 // delete timer;
             }
         });
@@ -398,7 +413,10 @@ void MainWindow::showCameraFrame()
     // // 显示处理后的图像
     QImage qimage(frame.data, frame.cols, frame.rows, QImage::Format_RGB888);
     QPixmap pixmap = QPixmap::fromImage(qimage);
-    ui->m_lbl_video->setPixmap(pixmap);
+    QSize labelSize = ui->m_lbl_video->size();
+    QPixmap scaledPixmap = pixmap.scaled(labelSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    ui->m_lbl_video->setPixmap(scaledPixmap);
 }
 
 void MainWindow::on_m_btn_openCamera_clicked()
@@ -413,17 +431,17 @@ void MainWindow::on_m_btn_openCamera_clicked()
         qDebug() << "MainWindow:Camera closed successfully!";
         ui->m_btn_openCamera->setText("打开");
         ui->m_btn_snap->setDisabled(true);
-        ui->m_btn_record->setDisabled(true);
+        // ui->m_btn_record->setDisabled(true);
     } else {
         // 根据索引打开相机
         bool success = m_usbCap->open(m_camIndex);
         if (success) {
-            m_readTimer->setInterval(int(1000/30));
+            m_readTimer->setInterval(int(1000/this->m_fps));
             m_readTimer->start();
             qDebug() << "MainWindow:Camera opened successfully!";
             ui->m_btn_openCamera->setText("关闭");
             ui->m_btn_snap->setDisabled(false);
-            ui->m_btn_record->setDisabled(false);
+            // ui->m_btn_record->setDisabled(false);
         } else {
             // QMessageBox::critical(this, "Error", "Failed to open camera!");
         }
@@ -460,7 +478,4 @@ void MainWindow::on_m_cbx_cameraList_currentIndexChanged(int index)
 {
     this->m_camIndex = index;
 }
-
-
-
 

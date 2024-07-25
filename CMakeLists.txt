@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 project(ZF_TriAxisCamControl VERSION 0.1 LANGUAGES CXX)
-
+include("C:/Programs/vcpkg/scripts/buildsystems/vcpkg.cmake")
 # 打印信息
 message(STATUS "src This is BINARY dir " ${PROJECT_BINARY_DIR})
 message(STATUS "src This is SOURCE dir " ${PROJECT_SOURCE_DIR})
@@ -16,9 +16,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # LubonMover SDK路径
 set(LubonMover_DIR "${PROJECT_SOURCE_DIR}/ext/LuBon_mover_C++SDK")
 find_package(LubonMover REQUIRED)
-# MSVC OpenCV
-set(OpenCV_DIR "E:/share/runtime/win/x64/opencv/build")
-# set(OpenCV_DIR "E:/share/runtime/win/x64/MinGW_OpenCV490")
+set(OpenCV_DIR "${VCPKG_INSTALLED_DIR}/x64-windows/share/opencv4")
 find_package(OpenCV REQUIRED)
 
 
@@ -40,7 +38,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${PROJECT_NAME}
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        res.qrc
+        ico.rc
     )
 
 # Define target properties for Android with Qt 6 as:
@@ -81,6 +79,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE_ICON_FILE favicon.ico
 )
 
 include(GNUInstallDirs)

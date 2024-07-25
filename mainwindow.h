@@ -57,6 +57,7 @@ private slots:
     void on_m_cbx_cameraList_currentIndexChanged(int index);
 
 
+
 private:
     Ui::MainWindow *ui;
     int m_handle;
@@ -69,10 +70,11 @@ private:
     // 初始化UVC相机
     void initUVC();
     void initUi(bool flag);
-
+    int m_fps = 30;
     int m_jogStep = 0;
     int m_jogNum = 0;
     int m_jogDelay = 0;
+    int m_count = 1;
     QTimer *m_readTimer = nullptr;
     QTimer* m_takeTimer = nullptr;
     QTimer* m_moverTimer = nullptr;
